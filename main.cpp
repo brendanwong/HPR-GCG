@@ -204,6 +204,7 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
             cout << "G1 X100 Y10 F6000\n";
             cout << "M84\n";
             break;
+            
         case 2:
             for (int row = 0; row < arrayHeight; row++)
             {
@@ -211,96 +212,28 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
                 {
                     cout << "G1 E" << ALG_EXT << " F" << FR_EXTRUDE << endl;
                     cout << "G1 E-" << ALG_EXT_REV << " F" << FR_EXTRUDE << endl;
-                    
+                    cout << "G4 P" << ALG_DWELL << endl;
+                    cout << "G1 X" << (row % 2 ? -1: 1)*X_MOVE << " F" << FR_MOVE_XY << endl;
                 }
+                cout << "G1 E" << ALG_EXT << " F" << FR_EXTRUDE << endl;
+                cout << "G1 E-" << ALG_EXT_REV << " F" << FR_EXTRUDE << endl;
+                cout << "G4 P" << ALG_DWELL;
+                
+                if (row < arrayHeight)
+                {
+                    cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl;
+                }
+                else
+                    cout << endl;
             }
+            cout << "G90\n";
+            cout << "G1 Z" << DISH_HEIGHT << "F1000\n";
+            cout << "G1 E-.5 F50\n";
+            cout << "G1 X100 Y10 F6000\n";
+            cout << "M84\n";
+            break;
             
     }
     
 }
-
-
-/*
- 
- Enter name: brendan
- Enter material (1 for CaCl2, 2 for HPR, 3 for ABTS): 1
- Enter position: 1
- Enter a width for the array (up to 8): 3
- Enter a length for the array (up to 8): 3
- 
- brendan
- CaCl2
- 1
- 3x3
- 
- G90
- G1 Z25 F1000
- G1 X30 Y30 F6000
- G1 Z2.5 F1000
- 
- G91
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 X20 F6000
- G1 Z-5 F400
- 
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 X20 F6000
- G1 Z-5 F400
- 
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 Y20 F6000
- G1 Z-5 F400
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 X-20 F6000
- G1 Z-5 F400
- 
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 X-20 F6000
- G1 Z-5 F400
- 
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 Y20 F6000
- G1 Z-5 F400
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 X20 F6000
- G1 Z-5 F400
- 
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- G1 X20 F6000
- G1 Z-5 F400
- 
- G1 E1 F200
- G4 P1000
- G1 Z5 F400
- 
- G90
- G1 Z25 F1000
- Program ended with exit code: 0
- 
- */
-
-
-
-
-
-
-
-
-
 
