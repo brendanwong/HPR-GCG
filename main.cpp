@@ -205,7 +205,15 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
             cout << "M84\n";
             break;
         case 2:
-            cout << "hello";
+            for (int row = 0; row < arrayHeight; row++)
+            {
+                for (int col = 0; col < (arrayWidth - 1); col++)
+                {
+                    cout << "G1 E" << ALG_EXT << " F" << FR_EXTRUDE << endl;
+                    cout << "G1 E-" << ALG_EXT_REV << " F" << FR_EXTRUDE << endl;
+                    
+                }
+            }
             
     }
     
