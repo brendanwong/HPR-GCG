@@ -31,18 +31,15 @@ static const int COORD_2 = 130;
 
 static const int NUM_TRYS = 3;
 
-
 static const int X_BORDER = 40;
 static const int Y_BORDER = 40;
 static const int DISH_DIAMETER = 100;
-
-
 
 void arrayPrint(int material, int arrayWidth, int arrayLength, int X_MOVE, int Y_MOVE);
 
 int main()
 {
-    //initial file info
+    //initial file info, will be replaced with GUI
     
     string name;
     int position, material, arrayWidth, arrayHeight, X_MOVE, Y_MOVE;
@@ -56,14 +53,16 @@ int main()
     if (material > 3 || material < 1)
     {
         cout << "please enter a valid material\n";
+        return 0;
     }
     
-    cout << "Enter position: ";
+    cout << "Enter position (1-4): ";
     cin >> position;
     
     if (position > 4 || position < 1)
     {
         cout << "please enter a valid position\n";
+        return 0;
     }
     
     cout << "Enter a width for the array (up to 8): ";
@@ -72,6 +71,7 @@ int main()
     if (arrayWidth > 8 || arrayWidth < 1)
     {
         cout << "please enter a valid width\n";
+        return 0;
     }
     
     cout << "Enter a height for the array (up to 8): ";
@@ -80,11 +80,10 @@ int main()
     if (arrayHeight > 8 || arrayHeight < 1)
     {
         cout << "please enter a valid width\n";
+        return 0;
     }
     
-    
-    
-    //display entered info for verification
+    //confirmation
     
     cout << endl;
     cout << "name: " << name << endl;
@@ -104,32 +103,24 @@ int main()
     }
     cout << "postition: " << position << endl;
     
-    cout << "size: " << arrayWidth << "x" << arrayHeight << endl;
-    
-    cout << endl;
-    
-    
+    cout << "size: " << arrayWidth << "x" << arrayHeight << endl << endl;
     
     //dynamic array move calculations
-    
     //assuming set dish diameter of 100mm
-    
-    
     
     X_MOVE = DISH_DIAMETER - X_BORDER;
     X_MOVE = X_MOVE / arrayWidth;
     
     Y_MOVE = DISH_DIAMETER - Y_BORDER;
     Y_MOVE = Y_MOVE / arrayHeight;
-    
-    
-    
-    
+
     
     //begin building gcode
     
     cout << "G90\n";
     cout << "G1 Z" << DISH_HEIGHT << " F1000\n";
+    
+    //moves to zero for selected plate position
     
     switch(position)
     {
@@ -161,20 +152,19 @@ int main()
             break;
     }
     
-    cout << "\nG91\n";
-    
+    //relative positioning start
+    cout << "\nG91\n\n";
     
     arrayPrint(material, arrayWidth, arrayHeight, X_MOVE, Y_MOVE);
-    
-    
+
 }
 
 
 void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y_MOVE)
 {
-    
     switch(material)
     {
+        //CaCl2 print
         case 1:
             for (int row = 0; row < arrayHeight; row++)
             {
@@ -193,10 +183,10 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
                 if (row < arrayHeight)
                 {
                     cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl;
-                    cout << "G1 Z-" << Z_MOVE << " F" << Z_FEEDRATE << endl;
+                    cout << "G1 Z-" << Z_MOVE << " F" << Z_FEEDRATE << endl << endl;
                 }
                 else
-                    cout << endl;
+                    cout << endl << endl;
             }
             cout << "G90\n";
             cout << "G1 Z" << DISH_HEIGHT << " F1000\n";
@@ -205,6 +195,7 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
             cout << "M84\n";
             break;
             
+        //HPR Alginate mixture
         case 2:
             for (int row = 0; row < arrayHeight; row++)
             {
@@ -213,27 +204,24 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
                     cout << "G1 E" << ALG_EXT << " F" << FR_EXTRUDE << endl;
                     cout << "G1 E-" << ALG_EXT_REV << " F" << FR_EXTRUDE << endl;
                     cout << "G4 P" << ALG_DWELL << endl;
-                    cout << "G1 X" << (row % 2 ? -1: 1)*X_MOVE << " F" << FR_MOVE_XY << endl;
+                    cout << "G1 X" << (row % 2 ? -1: 1)*X_MOVE << " F" << FR_MOVE_XY << endl << endl;
                 }
                 cout << "G1 E" << ALG_EXT << " F" << FR_EXTRUDE << endl;
                 cout << "G1 E-" << ALG_EXT_REV << " F" << FR_EXTRUDE << endl;
-                cout << "G4 P" << ALG_DWELL;
+                cout << "G4 P" << ALG_DWELL << endl;
                 
                 if (row < arrayHeight)
                 {
-                    cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl;
+                    cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl << endl;
                 }
                 else
-                    cout << endl;
+                    cout << endl << endl;
             }
             cout << "G90\n";
             cout << "G1 Z" << DISH_HEIGHT << "F1000\n";
-            cout << "G1 E-.5 F50\n";
+            cout << "G1 E-.5 F50\n"; //reverse extrude
             cout << "G1 X100 Y10 F6000\n";
             cout << "M84\n";
             break;
-            
     }
-    
 }
-
