@@ -13,19 +13,18 @@ static const int Z_MOVE = 5;
 static const int EXTRUDE = 1;
 
 static const int Z_START_ALGINATE = 10;
-static const int ALG_EXT = 2.4;
-static const int ALG_EXT_REV = 0.8;
+static const double ALG_EXT = 2.4;
+static const double ALG_EXT_REV = 0.8;
 static const int ALG_DWELL = 3000;
 
 static const int Z_START_ABTS = 10;
-static const int ABTS_EXT = 1.7;
-static const int ABTS_EXT_REV = 0.4;
+static const double ABTS_EXT = 1.7;
+static const double ABTS_EXT_REV = 0.4;
 static const int FR_ABTS_EXT = 50;
 
 static const int DISH_HEIGHT = 25;
 static const int PRINT_AREA = 60;
-static const int DIST_3x3 = 20;
-static const int DIST_4x4 = 14;
+
 static const int COORD_1 = 30;
 static const int COORD_2 = 130;
 
@@ -180,7 +179,7 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
                 cout << "G4 P" << DWELL << endl;
                 cout << "G1 Z" << Z_MOVE << " F" << Z_FEEDRATE << endl;
                 
-                if (row < arrayHeight)
+                if (row < arrayHeight - 1)
                 {
                     cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl;
                     cout << "G1 Z-" << Z_MOVE << " F" << Z_FEEDRATE << endl << endl;
@@ -210,7 +209,7 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
                 cout << "G1 E-" << ALG_EXT_REV << " F" << FR_EXTRUDE << endl;
                 cout << "G4 P" << ALG_DWELL << endl;
                 
-                if (row < arrayHeight)
+                if (row < arrayHeight - 1)
                 {
                     cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl << endl;
                 }
@@ -218,7 +217,7 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
                     cout << endl << endl;
             }
             cout << "G90\n";
-            cout << "G1 Z" << DISH_HEIGHT << "F1000\n";
+            cout << "G1 Z" << DISH_HEIGHT << " F1000\n";
             cout << "G1 E-.5 F50\n"; //reverse extrude
             cout << "G1 X100 Y10 F6000\n";
             cout << "M84\n";
