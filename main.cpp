@@ -23,12 +23,10 @@ static const double ABTS_EXT_REV = 0.4;
 static const int FR_ABTS_EXT = 50;
 
 static const int DISH_HEIGHT = 25;
-static const int PRINT_AREA = 60;
 
 static const int COORD_1 = 30;
 static const int COORD_2 = 130;
 
-static const int NUM_TRYS = 3;
 
 static const int X_BORDER = 40;
 static const int Y_BORDER = 40;
@@ -194,7 +192,7 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
             cout << "M84\n";
             break;
             
-        //HPR Alginate mixture
+        //HPR Alginate mixture 1%
         case 2:
             for (int row = 0; row < arrayHeight; row++)
             {
@@ -210,9 +208,7 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
                 cout << "G4 P" << ALG_DWELL << endl;
                 
                 if (row < arrayHeight - 1)
-                {
                     cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl << endl;
-                }
                 else
                     cout << endl << endl;
             }
@@ -221,6 +217,28 @@ void arrayPrint(int material, int arrayWidth, int arrayHeight, int X_MOVE, int Y
             cout << "G1 E-.5 F50\n"; //reverse extrude
             cout << "G1 X100 Y10 F6000\n";
             cout << "M84\n";
+            break;
+            
+        //ABTS Substrate -- assay print?
+        case 3:
+            for (int row = 0; row < arrayHeight; row++)
+            {
+                for (int col = 0; col < (arrayWidth - 1); col++)
+                {
+                    cout << "G1 E" << ABTS_EXT << " F" << FR_EXTRUDE << endl;
+                    cout << "G1 E-" << ABTS_EXT_REV << " F" << FR_ABTS_EXT << endl;
+                    cout << "G4 P" << DWELL << endl;
+                    cout << "G1 X" << (row % 2 ? -1: 1)*X_MOVE << " F" << FR_MOVE_XY << endl << endl;
+                }
+                cout << "G1 E " << ABTS_EXT << " F " << FR_EXTRUDE << endl;
+                cout << "G1 E-" << ABTS_EXT_REV << " F" << FR_ABTS_EXT << endl;
+                cout << "G4 P" << DWELL << endl;
+                
+                if (row < arrayHeight  - 1)
+                    cout << "G1 Y" << Y_MOVE << " F" << FR_MOVE_XY << endl << endl;
+                else
+                    cout << endl << endl;
+            }
             break;
     }
 }
