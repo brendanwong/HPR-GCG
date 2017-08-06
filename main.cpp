@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 static const std::string FR_EXTRUDE = "200";
@@ -31,8 +30,8 @@ static const int Y_BORDER = 40;
 static const int DISH_DIAMETER = 100;
 
 int main(int argc, const char * argv[]) {
-    std::string output = "";
     
+    std::string output = "";
     std::string nameInput = "Brendan Wong";
     int yearInput = 2017;
     int monthInput = 8;
@@ -45,11 +44,17 @@ int main(int argc, const char * argv[]) {
     int Y_MOVE;
     int calc;
     
+    //Dynamic array move calculations
+    //Assuming set dish diameter of 100mm
+    
     X_MOVE = DISH_DIAMETER - X_BORDER;
     X_MOVE = X_MOVE / widthInput;
     
     Y_MOVE = DISH_DIAMETER - Y_BORDER;
     Y_MOVE = Y_MOVE / heightInput;
+    
+    
+    //Begin building gcode
     
     output += "G90\n";
     output += "G1 Z" + DISH_HEIGHT + " F1000\n";
@@ -84,11 +89,14 @@ int main(int argc, const char * argv[]) {
     }
     
     
+    
+    //Relative positioning start
+    
     output += "\nG91\n\n";
     
     switch(materialInput)
     {
-            //cacl2
+        //CaCl2 print
         case 1:
             for (int row = 0; row < heightInput; row++)
             {
@@ -97,9 +105,11 @@ int main(int argc, const char * argv[]) {
                     output += "G1 E" + EXTRUDE + " F" + FR_EXTRUDE + "\n";
                     output += "G4 P" + DWELL + "\n";
                     output += "G1 Z" + Z_MOVE + " F" + Z_FEEDRATE + "\n";
+                    
                     calc = row % 2 ? -1 : 1;
                     calc *= X_MOVE;
                     std::string temp  = std::to_string(calc);
+                    
                     output += "G1 X" + temp + " F" + FR_MOVE_XY + "\n";
                     output += "G1 Z-" + Z_MOVE + " F" + Z_FEEDRATE + "\n\n";
                 }
@@ -123,7 +133,7 @@ int main(int argc, const char * argv[]) {
             break;
             
             
-            //hpr
+        // 1% HPR Alginate Mixture
         case 2:
             for (int row = 0; row < heightInput; row++)
             {
@@ -132,14 +142,17 @@ int main(int argc, const char * argv[]) {
                     output += "G1 E" + ALG_EXT + " F" + FR_EXTRUDE + "\n";
                     output += "G1 E-" + ALG_EXT_REV + " F" + FR_EXTRUDE + "\n";
                     output += "G4 P" + ALG_DWELL + "\n";
+                    
                     calc = row % 2 ? -1 : 1;
                     calc *= X_MOVE;
                     std::string temp = std::to_string(calc);
+                    
                     output += "G1 X" + temp + " F" + FR_MOVE_XY + "\n\n";
                 }
                 output += "G1 E" + ALG_EXT + " F" + FR_EXTRUDE + "\n";
                 output +=  "G1 E-" + ALG_EXT_REV + " F" + FR_EXTRUDE + "\n";
                 output += "G4 P" + ALG_DWELL + "\n";
+                
                 if (row < heightInput - 1)
                     output += "G1 Y" + std::to_string(Y_MOVE) + " F" + FR_MOVE_XY + "\n\n";
                 else
@@ -152,7 +165,7 @@ int main(int argc, const char * argv[]) {
             output += "M84\n";
             break;
             
-            //abts
+        //ABTS Substrate -- assay print
         case 3:
             for (int row = 0; row < heightInput; row++)
             {
@@ -161,9 +174,11 @@ int main(int argc, const char * argv[]) {
                     output += "G1 E" + ABTS_EXT + " F" + FR_EXTRUDE + "\n";
                     output += "G1 E-" + ABTS_EXT_REV + " F" + FR_ABTS_EXT + "\n";
                     output += "G4 P" + DWELL + "\n";
+                    
                     calc = row % 2 ? -1 : 1;
                     calc *= X_MOVE;
                     std::string temp = std::to_string(calc);
+                    
                     output += "G1 X" + temp + " F" + FR_MOVE_XY + "\n\n";
                 }
                 output += "G1 E " + ABTS_EXT + " F " + FR_EXTRUDE + "\n";
@@ -179,105 +194,5 @@ int main(int argc, const char * argv[]) {
             break;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
     std::cout << output;
-    
-    
-    
-    
-    
-    
-    
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
