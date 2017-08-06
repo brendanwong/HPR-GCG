@@ -12,14 +12,14 @@ static const std::string Z_MOVE = "5";
 static const std::string EXTRUDE = "1";
 
 static const std::string Z_START_ALGINATE = "10";
-static const double ALG_EXT = 2.4;
-static const double ALG_EXT_REV = 0.8;
-static const int ALG_DWELL = 3000;
+static const std::string ALG_EXT = "2.4";
+static const std::string ALG_EXT_REV = "0.8";
+static const std::string ALG_DWELL = "3000";
 
 static const std::string Z_START_ABTS = "10";
-static const double ABTS_EXT = 1.7;
-static const double ABTS_EXT_REV = 0.4;
-static const int FR_ABTS_EXT = 50;
+static const std::string ABTS_EXT = "1.7";
+static const std::string ABTS_EXT_REV = "0.4";
+static const std::string FR_ABTS_EXT = "50";
 
 static const std::string DISH_HEIGHT = "25";
 
@@ -129,19 +129,53 @@ int main(int argc, const char * argv[]) {
             {
                 for (int col = 0; col < (widthInput - 1); col++)
                 {
-                    output +=
+                    output += "G1 E" + ALG_EXT + " F" + FR_EXTRUDE + "\n";
+                    output += "G1 E-" + ALG_EXT_REV + " F" + FR_EXTRUDE + "\n";
+                    output += "G4 P" + ALG_DWELL + "\n";
+                    calc = row % 2 ? -1 : 1;
+                    calc *= X_MOVE;
+                    std::string temp = std::to_string(calc);
+                    output += "G1 X" + temp + " F" + FR_MOVE_XY + "\n\n";
                 }
+                output += "G1 E" + ALG_EXT + " F" + FR_EXTRUDE + "\n";
+                output +=  "G1 E-" + ALG_EXT_REV + " F" + FR_EXTRUDE + "\n";
+                output += "G4 P" + ALG_DWELL + "\n";
+                if (row < heightInput - 1)
+                    output += "G1 Y" + std::to_string(Y_MOVE) + " F" + FR_MOVE_XY + "\n\n";
+                else
+                    output += "\n\n";
             }
-            
-            
-            
-            
-            
-            
+            output += "G90\n";
+            output += "G1 Z" + DISH_HEIGHT + " F1000\n";
+            output += "G1 E-.5 F50\n"; //reverse extrude
+            output += "G1 X100 Y10 F6000\n";
+            output += "M84\n";
             break;
             
             //abts
         case 3:
+            for (int row = 0; row < heightInput; row++)
+            {
+                for (int col = 0; col < (widthInput - 1); col++)
+                {
+                    output += "G1 E" + ABTS_EXT + " F" + FR_EXTRUDE + "\n";
+                    output += "G1 E-" + ABTS_EXT_REV + " F" + FR_ABTS_EXT + "\n";
+                    output += "G4 P" + DWELL + "\n";
+                    calc = row % 2 ? -1 : 1;
+                    calc *= X_MOVE;
+                    std::string temp = std::to_string(calc);
+                    output += "G1 X" + temp + " F" + FR_MOVE_XY + "\n\n";
+                }
+                output += "G1 E " + ABTS_EXT + " F " + FR_EXTRUDE + "\n";
+                output += "G1 E-" + ABTS_EXT_REV + " F" + FR_ABTS_EXT + "\n";
+                output += "G4 P" + DWELL + "\n";
+                
+                if (row < heightInput - 1)
+                    output += "G1 Y" + std::to_string(Y_MOVE) + " F" + FR_MOVE_XY + "\n\n";
+                else
+                    output += "\n\n";
+            }
+            
             break;
     }
     
